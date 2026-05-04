@@ -31,7 +31,7 @@ public class LoginService {
             return Response.error(401);
         }
 
-        String token = jwt.generateToken(user.getUsername());
+        String token = jwt.generateToken(user.getUsername(), user.getAuthSeq(), user.getRoleCode());
 
         return Response.success(new LoginResponse(token));
     }

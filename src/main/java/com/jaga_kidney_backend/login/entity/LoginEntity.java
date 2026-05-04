@@ -24,9 +24,9 @@ public class LoginEntity {
     private String password;
 
     @Column(name = "user_seq")
-    private String userSeq;
+    private Integer userSeq;
 
     @Column(name = "role_code")
     private String roleCode;
-
+    
 }

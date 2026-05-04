@@ -6,19 +6,35 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class Jwt {
 
-    private final String SECRET = "mysecretkeymysecretkeymysecretkey12345"; // 32+ chars
-    private final long EXPIRATION = 1000 * 60 * 30; // 30 mins
+    private final String SECRET = "mysecretkeymysecretkeymysecretkey12345"; 
+    private final long EXPIRATION = 1000 * 60 * 30;
 
     private Key getSignKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public String generateToken(String username) {
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+            .setSigningKey(getSignKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+    } 
+
+    public String generateToken(String username, Integer user_seq, String role_code) {
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("user_seq", user_seq);
+        claims.put("role_code", role_code);
+
         return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
@@ -26,7 +42,7 @@ public class Jwt {
                 .compact();
     }
 
-    public String extractUsername(String token) {
+    public String getUsernameFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
                 .build()
@@ -42,5 +58,13 @@ public class Jwt {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public String getUserSeqFromToken(String token) {
+        return extractAllClaims(token).get("user_seq", String.class);
+    }
+
+    public String getRoleCodeFromToken(String token) {
+        return extractAllClaims(token).get("role_code", String.class);
     }
 }

@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface LoginRepository extends JpaRepository<LoginEntity, Integer> {
 
     Optional<LoginEntity> findByUsername(String username);
+    boolean existsByUsername(String username);
 }

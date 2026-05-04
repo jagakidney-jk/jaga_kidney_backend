@@ -26,6 +26,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${allowed_endpoints}")
     private String allowed_endpoints;
 
+    private boolean isAllowedEndpoint(String path) {
+        String[] endpoints = allowed_endpoints.split(",");
+
+        for (String endpoint : endpoints) {
+            endpoint = endpoint.trim();
+
+            // match exact or wildcard
+            if (path.equals("/jagakidney" + endpoint)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -35,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getServletPath();
 
         // allow login
-        if (path.contains("jagakidney/auth"+allowed_endpoints)) {
+        if (isAllowedEndpoint(path)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -51,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (jwt.validateToken(token)) {
 
-            String username = jwt.extractUsername(token);
+            String username = jwt.getUsernameFromToken(token);
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
