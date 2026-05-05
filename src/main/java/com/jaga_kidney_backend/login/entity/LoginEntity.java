@@ -28,5 +28,8 @@ public class LoginEntity {
 
     @Column(name = "role_code")
     private String roleCode;
+
+    @Column(name = "last_login")
+    private String lastLogin;
     
 }

@@ -9,12 +9,17 @@ import com.jaga_kidney_backend.util.Response;
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class LoginService {
 
     private final LoginRepository loginRepository;
@@ -32,6 +37,9 @@ public class LoginService {
         }
 
         String token = jwt.generateToken(user.getUsername(), user.getAuthSeq(), user.getRoleCode());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        loginRepository.updateStatusNative(user.getUserSeq(), LocalDateTime.now().format(formatter));
 
         return Response.success(new LoginResponse(token));
     }

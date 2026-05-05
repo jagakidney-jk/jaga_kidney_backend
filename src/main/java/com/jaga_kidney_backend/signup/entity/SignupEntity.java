@@ -1,8 +1,5 @@
 package com.jaga_kidney_backend.signup.entity;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 import lombok.*;
 

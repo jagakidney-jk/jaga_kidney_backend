@@ -1,6 +1,5 @@
 package com.jaga_kidney_backend.signup.service;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -19,6 +18,7 @@ import com.jaga_kidney_backend.util.Response;
 import com.jaga_kidney_backend.util.StatusCodes;
 
 @Service
+@Transactional
 public class SignupService {
 
     @Autowired
@@ -30,7 +30,6 @@ public class SignupService {
     @Autowired
     Jwt jwt;
 
-    @Transactional
     public Response<SignupResponse> signup(SignupRequest request) {
 
         String username = request.getUsername().trim().toLowerCase();
