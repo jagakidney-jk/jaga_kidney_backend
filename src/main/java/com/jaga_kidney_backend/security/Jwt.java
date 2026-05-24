@@ -60,8 +60,8 @@ public class Jwt {
         }
     }
 
-    public String getUserSeqFromToken(String token) {
-        return extractAllClaims(token).get("user_seq", String.class);
+    public int getUserSeqFromToken(String token) {
+        return extractAllClaims(token).get("user_seq", Integer.class);
     }
 
     public String getRoleCodeFromToken(String token) {
